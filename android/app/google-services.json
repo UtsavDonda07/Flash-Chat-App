@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "932175806588",
+    "project_id": "flash-chat-5dc61",
+    "storage_bucket": "flash-chat-5dc61.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932175806588:android:3cc3b8b095b94861ba49f9",
+        "android_client_info": {
+          "package_name": "com.Utsav.flash_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932175806588-qn5jret2c2qad6obed82p9m6oj7gabo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0ZFHs6IaJKDinJwUKt43fFtqNipUf1YM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932175806588-qn5jret2c2qad6obed82p9m6oj7gabo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932175806588:android:41dac3434ab78f90ba49f9",
+        "android_client_info": {
+          "package_name": "com.UtsavDonda.flash_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932175806588-qn5jret2c2qad6obed82p9m6oj7gabo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0ZFHs6IaJKDinJwUKt43fFtqNipUf1YM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932175806588-qn5jret2c2qad6obed82p9m6oj7gabo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
