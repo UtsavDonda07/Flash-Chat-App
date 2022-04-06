@@ -191,6 +191,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  liquid_progress_indicator:
+    dependency: "direct main"
+    description:
+      name: liquid_progress_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
+  loading_overlay:
+    dependency: "direct main"
+    description:
+      name: loading_overlay
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   lottie:
     dependency: "direct main"
     description:

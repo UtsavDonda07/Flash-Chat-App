@@ -2,6 +2,13 @@ import 'package:flash_chat_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+DateTime now = new DateTime(now.hour,now.minute);
+// message sequence
+// loading indicator
+//welcome logo
+//time in message
+
+final loggedInUser = FirebaseAuth.instance.currentUser;
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -14,27 +21,28 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
   final messageTextController = TextEditingController();
-
+  final fieldText = TextEditingController();
 
   late String messageText;
   // FirebaseUser ;
-  final loggedInUser = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     getCurrentUser();
-    UpdateData();
+    // UpdateData();
     super.initState();
   }
-
-  void UpdateData() {
-    final docUser =
-        FirebaseFirestore.instance.collection('messages').doc('Mydoc_name');
-//update docuser
-    docUser.update({
-      'name': 'Swaminarayan',
-    });
+  void clearText() {
+    fieldText.clear();
   }
+//   void UpdateData() {
+//     final docUser =
+//         FirebaseFirestore.instance.collection('messages').doc('Mydoc_name');
+// //update docuser
+//     docUser.update({
+//       'name': 'Swaminarayan',
+//     });
+//   }
 
   void getCurrentUser() async {
     try {
@@ -71,14 +79,11 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                // UpdateData();
-                messageStream();
-                //   // getMassages();
-                //   _auth.signOut();
-                // Navigator.pop(context);
+                  _auth.signOut();
+                Navigator.pop(context);
               }),
         ],
-        title: Text('⚡️Chat'),
+        title: Text('a@gmail.com'),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
@@ -97,16 +102,21 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: TextField(
                       onChanged: (value) {
                         controller:
-                        messageTextController;
+                        fieldText;
                         messageText = value;
                         //Do something with the user input.
                       },
                       decoration: kMessageTextFieldDecoration,
-                    ),
+
+
+
+                      controller: fieldText, ),
                   ),
                   FlatButton(
-                    onPressed: () {
-                      messageTextController.clear();
+                    onPressed: ()
+                    {
+                      clearText();
+                      // messageTextController.clear();
                       _firestore.collection('messages').add(
                           {'text': messageText, 'sender': loggedInUser!.email});
                       //Implement send functionality.
@@ -135,24 +145,33 @@ class MessagesStream extends StatelessWidget {
       stream: _firestore.collection('messages').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final messages = snapshot.data?.docs;
+          final messages = snapshot.data?.docs.reversed;
           List<MessageBubble> messageWidgets = [];
           for (var message in messages!) {
             final messageText = message['text'];
             final messageSender = message['sender'];
-            final messageBubble = MessageBubble(text: messageText, sender: messageSender);
+            final currentUser = loggedInUser?.email;
+            if (currentUser == messageSender) {}
+            final messageBubble = MessageBubble(
+              text: messageText,
+              sender: messageSender,
+              isMe: currentUser == messageSender,
+            );
             messageWidgets.add(messageBubble);
           }
           return Expanded(
             child: ListView(
-              padding:
-              EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              reverse: true,
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
               children: messageWidgets,
             ),
           );
         } else {
-          return Column(
-            children: [Text("Empty list")],
+          return Expanded(
+            child: ListView(
+              reverse: true,
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+            ),
           );
         }
       },
@@ -160,38 +179,49 @@ class MessagesStream extends StatelessWidget {
   }
 }
 
-
 class MessageBubble extends StatelessWidget {
-  MessageBubble({required this.text,required this.sender});
-final String sender;
-final String text;
+  MessageBubble({required this.text, required this.sender, required this.isMe});
+  final String sender;
+  final String text;
+  final bool isMe;
   @override
   Widget build(BuildContext context) {
-    return
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(sender,style: TextStyle(fontSize: 10,color: Colors.black38),),
-          Padding(
+    return Column(
+      crossAxisAlignment:
+          isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Text("   $sender",
+          style: isMe?TextStyle(fontSize: 10, color: Colors.black38):TextStyle(fontSize: 10, color: Colors.green),
+        ),
+        Padding(
           padding: const EdgeInsets.all(10.0),
           child: Material(
             elevation: 5,
             // borderRadius: BorderRadius.only(topLeft: , ),
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(10),
 
-            color: Colors.lightBlueAccent,
+            color: isMe ? Colors.green : Colors.grey,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10 , horizontal: 20),
-              child: Text(
-                '$text',
-                style: TextStyle(fontSize: 15),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Column(
+                children: [
+                  Text(
+                    '$text',
+                    style: TextStyle(fontSize: 15,color: Colors.white),
+                  ),
+                  // Text(
+                  //   '${now.hour} ${now.minute}',
+                  //   style: TextStyle(fontSize: 10,color: Colors.black),
+                  // ),
+                ],
               ),
+
+
             ),
           ),
-    ),
-          //hello
-        ],
-      );
+        ),
+      ],
+    );
     ;
   }
 }

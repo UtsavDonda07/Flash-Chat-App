@@ -3,7 +3,7 @@ import 'package:flash_chat_app/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_app/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = "resistration_screen";
@@ -16,7 +16,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String email;
   late String password;
   final _auth = FirebaseAuth.instance;
-  // bool showSpinner=false;
+   bool showSpinner=false;
+   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,28 +68,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               colour: Colors.blueAccent,
               text: "Register",
               onPressed: () async{
-              //     setState(() {
-              //       showSpinner=true;
-                // }),
+                  setState(() {
+                   Container(
+                     color: Colors.green,
+                     height: 200,
+                     width: 300,
+                   );
+                });
               try {
                 final newUser = await _auth.createUserWithEmailAndPassword(
                     email: email, password: password);
                 if(newUser!=null){
                   Navigator.pushNamed(context, ChatScreen.id);
                 }
-                // setState(() {
-                //   showSpinner=false;
-                // });
+                setState(() {
+                  showSpinner=false;
+                });
               }
               catch(e){
                 print(e);
               }
 
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+
   }
 }

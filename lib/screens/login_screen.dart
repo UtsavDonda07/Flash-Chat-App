@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat_app/screens/chat_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = "login_screen";
@@ -16,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late String email;
   late String password;
   final _auth = FirebaseAuth.instance;
-bool isVisible=true;
+  bool isVisible = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,38 +65,18 @@ bool isVisible=true;
             RoundedButton(
               colour: Colors.lightBlueAccent,
               text: "Log In",
-              onPressed: () async{
-
-             final loginUser=await _auth.signInWithEmailAndPassword(email: email, password: password);
-             try {
-               // setState(() {
-               //   isVisible=true;
-               // });
-               //
-               // setState(() {
-               //   Expanded(
-               //     child:Center(
-               //       child: Container(
-               //         height:200,
-               //         width: 200,
-               //
-               //         child:Visibility(
-               //           visible: isVisible,
-               //           child: Lottie.asset('assets/loading.json'),
-               //         ),
-               //       ),
-               //     ),
-               //   );
-
-               // });
-
-                if (loginUser != null) {
-                 Navigator.pushNamed(context, ChatScreen.id);
-               }
-             }
-             catch(e){
-               print(e);
-             }
+              onPressed: () async {
+                final loginUser = await _auth.signInWithEmailAndPassword(
+                    email: email, password: password);
+                try {
+                  setState(() {
+                  });
+                  if (loginUser != null) {
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  }
+                } catch (e) {
+                  print(e);
+                }
               },
             ),
           ],
