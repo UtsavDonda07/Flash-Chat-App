@@ -4,14 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 DateTime now = new DateTime(now.hour,now.minute);
 // message sequence
-// loading indicator
+//login suggetion
 //welcome logo
 //time in message
 
 final loggedInUser = FirebaseAuth.instance.currentUser;
 
 final _firestore = FirebaseFirestore.instance;
-
+late final  String UserName;
 class ChatScreen extends StatefulWidget {
   static String id = "chat_screen";
   @override
@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Navigator.pop(context);
               }),
         ],
-        title: Text('a@gmail.com'),
+        title: Center(child: Text('Chat')),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
@@ -184,6 +184,7 @@ class MessageBubble extends StatelessWidget {
   final String sender;
   final String text;
   final bool isMe;
+   // UserName=sender;
   @override
   Widget build(BuildContext context) {
     return Column(
