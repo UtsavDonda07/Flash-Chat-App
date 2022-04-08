@@ -2,12 +2,13 @@ import 'package:flash_chat_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-DateTime now = new DateTime(now.hour,now.minute);
+// DateTime now = new DateTime(now.hour,now.minute);
 // message sequence
 //login suggetion
 //welcome logo
 //time in message
-
+var timeH;
+var timeM;
 final loggedInUser = FirebaseAuth.instance.currentUser;
 
 final _firestore = FirebaseFirestore.instance;
@@ -20,16 +21,15 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
-  final messageTextController = TextEditingController();
   final fieldText = TextEditingController();
 
   late String messageText;
-  // FirebaseUser ;
+
 
   @override
   void initState() {
     getCurrentUser();
-    // UpdateData();
+    // messageStream();
     super.initState();
   }
   void clearText() {
@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
 //   }
 // }
   void messageStream() async {
-    await for (var snapshort in _firestore.collection('messages').snapshots()) {
+    await for (var snapshort in _firestore.collection('messages').orderBy('CreatedAt').snapshots()) {
       for (var message in snapshort.docs) {
         print(message.data());
       }
@@ -115,11 +115,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   FlatButton(
                     onPressed: ()
                     {
+                      var timeM=DateTime.now().minute;
+                      timeH=DateTime.now().hour;
                       clearText();
-                      // messageTextController.clear();
                       _firestore.collection('messages').add(
-                          {'text': messageText, 'sender': loggedInUser!.email});
-                      //Implement send functionality.
+                          {'text': messageText, 'sender': loggedInUser!.email , 'CreatedAt':DateTime.now().millisecondsSinceEpoch ,'timeH':timeH,'timeM':timeM});
+
                     },
                     child: Text(
                       'Send',
@@ -142,7 +143,7 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').snapshots(),
+      stream: _firestore.collection('messages').orderBy('CreatedAt').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final messages = snapshot.data?.docs.reversed;
@@ -155,6 +156,7 @@ class MessagesStream extends StatelessWidget {
             final messageBubble = MessageBubble(
               text: messageText,
               sender: messageSender,
+              // CreatedAt: DateTime.now().millisecondsSinceEpoch,
               isMe: currentUser == messageSender,
             );
             messageWidgets.add(messageBubble);
@@ -168,10 +170,7 @@ class MessagesStream extends StatelessWidget {
           );
         } else {
           return Expanded(
-            child: ListView(
-              reverse: true,
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-            ),
+            child: Column(children: [Text("wait will a second")],),
           );
         }
       },
@@ -184,6 +183,7 @@ class MessageBubble extends StatelessWidget {
   final String sender;
   final String text;
   final bool isMe;
+   // var CreatedAt;
    // UserName=sender;
   @override
   Widget build(BuildContext context) {
@@ -205,13 +205,14 @@ class MessageBubble extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     '$text',
                     style: TextStyle(fontSize: 15,color: Colors.white),
                   ),
                   // Text(
-                  //   '${now.hour} ${now.minute}',
+                  //   '$timeH ${timeM}',
                   //   style: TextStyle(fontSize: 10,color: Colors.black),
                   // ),
                 ],
