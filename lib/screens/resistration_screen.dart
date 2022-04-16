@@ -3,7 +3,12 @@ import 'package:flash_chat_app/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_app/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+
+import 'home.dart';
+
+final _firestore = FirebaseFirestore.instance;
 
 class RegistrationScreen extends StatefulWidget {
   static String id = "resistration_screen";
@@ -17,7 +22,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String password;
   final _auth = FirebaseAuth.instance;
   bool isVisible = false;
-   
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,32 +74,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               RoundedButton(
                 colour: Colors.blueAccent,
                 text: "Register",
-                onPressed: () async{
+                onPressed: () async {
                   setState(() {
-                    isVisible=true;
+                    isVisible = true;
                   });
 
-                try {
-                  final newUser = await _auth.createUserWithEmailAndPassword(
-                      email: email, password: password);
-                  if(newUser!=null){
-                    Navigator.pushNamed(context, ChatScreen.id);
+                  try {
+                    final newUser = await _auth.createUserWithEmailAndPassword(
+                        email: email, password: password);
+                    _firestore
+                        .collection('resisteredUsers')               // for take list of resistered User diff. list
+                        .add({'users': email});
+
+                    if (newUser != null) {
+                      Navigator.pushNamed(context, HomeScreen.id);
+                    }
+                    setState(() {
+                      isVisible = false;
+                    });
+                  } catch (e) {
+                    print(e);
                   }
-                  setState(() {
-                    isVisible=false;
-                  });
-                }
-                catch(e){
-                  print(e);
-                }
-
-                  },
-                ),
-              ],
-            ),
+                },
+              ),
+            ],
           ),
+        ),
       ),
-      );
-
+    );
   }
 }

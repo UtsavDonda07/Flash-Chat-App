@@ -2,16 +2,16 @@ import 'package:flash_chat_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// DateTime now = new DateTime(now.hour,now.minute);
-// message sequence
-//login suggetion
-//welcome logo
-//time in message
+
+late  String SelectedReciver;
+void ReciverUser(String user){
+ SelectedReciver=user;
+}
 var timeH;
 var timeM;
 final loggedInUser = FirebaseAuth.instance.currentUser;
-
 final _firestore = FirebaseFirestore.instance;
+final currentuser = loggedInUser?.email;
 late final  String UserName;
 class ChatScreen extends StatefulWidget {
   static String id = "chat_screen";
@@ -30,6 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     getCurrentUser();
     // messageStream();
+    // reciver="introgyan@gmail.com";
     super.initState();
   }
   void clearText() {
@@ -55,7 +56,6 @@ class _ChatScreenState extends State<ChatScreen> {
       print(e);
     }
   }
-
 // void getMassages()async{
 //   final messages =  await _firestore.collection('messages').doc();
 //   for(var message in messages){
@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Navigator.pop(context);
               }),
         ],
-        title: Center(child: Text('Chat')),
+        title: Center(child: Text('$SelectedReciver')),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
@@ -119,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       timeH=DateTime.now().hour;
                       clearText();
                       _firestore.collection('messages').add(
-                          {'text': messageText, 'sender': loggedInUser!.email , 'CreatedAt':DateTime.now().millisecondsSinceEpoch ,'timeH':timeH,'timeM':timeM});
+                          {'text': messageText, 'sender': loggedInUser!.email,'reciver':SelectedReciver,'communicate':"${currentuser}-${SelectedReciver}" ,'CreatedAt':DateTime.now().millisecondsSinceEpoch });
 
                     },
                     child: Text(
@@ -143,7 +143,7 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').orderBy('CreatedAt').snapshots(),
+      stream: _firestore.collection('messages').where("communicate",whereIn: ["${currentuser}-${SelectedReciver}","${SelectedReciver}-${currentuser}"]).orderBy('CreatedAt').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final messages = snapshot.data?.docs.reversed;
@@ -151,14 +151,16 @@ class MessagesStream extends StatelessWidget {
           for (var message in messages!) {
             final messageText = message['text'];
             final messageSender = message['sender'];
+            final time=message['CreatedAt'];
             final currentUser = loggedInUser?.email;
             if (currentUser == messageSender) {}
             final messageBubble = MessageBubble(
               text: messageText,
               sender: messageSender,
-              // CreatedAt: DateTime.now().millisecondsSinceEpoch,
+              CreatedAt:time,
               isMe: currentUser == messageSender,
             );
+
             messageWidgets.add(messageBubble);
           }
           return Expanded(
@@ -179,12 +181,13 @@ class MessagesStream extends StatelessWidget {
 }
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble({required this.text, required this.sender, required this.isMe});
+  MessageBubble({required this.text, required this.sender, required this.isMe,required this.CreatedAt});
   final String sender;
   final String text;
   final bool isMe;
-   // var CreatedAt;
-   // UserName=sender;
+   var CreatedAt;
+
+  DateTime date = new DateTime.fromMillisecondsSinceEpoch(1486252500000);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -212,7 +215,7 @@ class MessageBubble extends StatelessWidget {
                     style: TextStyle(fontSize: 15,color: Colors.white),
                   ),
                   // Text(
-                  //   '$timeH ${timeM}',
+                  //   '$date',
                   //   style: TextStyle(fontSize: 10,color: Colors.black),
                   // ),
                 ],

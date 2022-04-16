@@ -6,6 +6,8 @@ import 'package:flash_chat_app/screens/chat_screen.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:lottie/lottie.dart';
 
+import 'home.dart';
+
 class LoginScreen extends StatefulWidget {
   static String id = "login_screen";
 
@@ -76,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       email: email, password: password);
                   try {
                     if (loginUser != null) {
-                      Navigator.pushNamed(context, ChatScreen.id);
+                      Navigator.pushNamed(context, HomeScreen.id);
                     }
                     setState(() {
                       isVisible=false;
