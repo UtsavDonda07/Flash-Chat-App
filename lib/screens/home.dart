@@ -39,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Navigator.pop(context);
               }),
         ],
-        title: Center(child: Text('ChatApp')),
-        backgroundColor: Colors.lightBlueAccent,
+        title: Center(child: Text('Hello')),
+        backgroundColor:Color(0xff60e1c8),
       ),
       body: SafeArea(
         child: Column(

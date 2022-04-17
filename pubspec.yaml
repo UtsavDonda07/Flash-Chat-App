@@ -19,6 +19,7 @@ dependencies:
   lottie: ^1.2.1
   liquid_progress_indicator: ^0.4.0
   loading_overlay: ^0.3.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

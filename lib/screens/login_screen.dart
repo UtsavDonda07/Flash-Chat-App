@@ -37,13 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   tag: "logo",
                   child: Container(
                     height: 200.0,
-                    child: Image.asset('images/logo.png'),
+                    child: Lottie.asset('assets/hello.json',height: 300),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 48.0,
-              ),
+
               TextField(
                 onChanged: (value) {
                   email = value;
@@ -67,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 24.0,
               ),
               RoundedButton(
-                colour: Colors.lightBlueAccent,
+                colour: Color(0xff60e1c8),
                 text: "Log In",
                 onPressed: () async {
                   setState(() {

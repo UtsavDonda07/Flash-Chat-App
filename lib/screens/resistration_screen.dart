@@ -5,7 +5,7 @@ import 'package:flash_chat_app/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-
+import 'package:lottie/lottie.dart';
 import 'home.dart';
 
 final _firestore = FirebaseFirestore.instance;
@@ -40,13 +40,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   tag: "logo",
                   child: Container(
                     height: 200.0,
-                    child: Image.asset('images/logo.png'),
+                    child: Lottie.asset('assets/hello.json',height: 300),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 48.0,
-              ),
+
               TextField(
                 textAlign: TextAlign.center,
                 onChanged: (value) {
@@ -72,7 +70,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 24.0,
               ),
               RoundedButton(
-                colour: Colors.blueAccent,
+                colour: Color(0xff34D8DC),
                 text: "Register",
                 onPressed: () async {
                   setState(() {

@@ -3,6 +3,7 @@ import 'package:flash_chat_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_app/screens/resistration_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:lottie/lottie.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String id ="welcome_screen";
@@ -51,31 +52,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
           children: <Widget>[
             Row(
               children: <Widget>[
-                Hero(
-                  tag: 'logo',
-                  child: Container(
-                    child: Image.asset('images/logo.png'),
-                    height:60,
-                  ),
-                ),
 
-                TypewriterAnimatedTextKit(
-               text:  [ 'Flash Chat'],
-                    textStyle: TextStyle(
-                      fontSize: 45.0,
-                      fontWeight: FontWeight.w900,
-                    ),
-                ),
+              Container(
+                height: 200,
+                width: 300,
+                child: Lottie.asset('assets/robot.json'),
+              ),
 
               ],
             ),
-            SizedBox(
-              height: 48.0,
-            ),
-            RoundedButton(colour: Colors.lightBlueAccent,text: "Log In",onPressed: (){
+
+            RoundedButton(colour:Color(0xff7fe7ba) ,text: "Log In",onPressed: (){
             Navigator.pushNamed(context, LoginScreen.id);
             },),
-            RoundedButton(colour: Colors.blueAccent,text: "Register",onPressed: (){
+            RoundedButton(colour: Color(0xff34D8DC),text: "Register",onPressed: (){
             Navigator.pushNamed(context, RegistrationScreen.id);
             },),
           ],

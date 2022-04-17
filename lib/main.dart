@@ -11,11 +11,11 @@ void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const FlashChat());
+  runApp(const Hello());
 }
 
-class FlashChat extends StatelessWidget {
-  const FlashChat({Key? key}) : super(key: key);
+class Hello extends StatelessWidget {
+  const Hello({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
