@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat_app/screens/home.dart';
 import 'package:flash_chat_app/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -6,28 +7,73 @@ import 'package:flash_chat_app/screens/login_screen.dart';
 import 'package:flash_chat_app/screens/chat_screen.dart';
 import 'constants.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'networking/auto_login.dart';
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const FlashChat());
+  runApp(const Hello());
 }
 
-class FlashChat extends StatelessWidget {
-  const FlashChat({Key? key}) : super(key: key);
+class Hello extends StatefulWidget {
+  const Hello({Key? key}) : super(key: key);
+
+  @override
+  State<Hello> createState() => _HelloState();
+}
+
+class _HelloState extends State<Hello> {
+  final _auth = FirebaseAuth.instance;
+
+
+  @override
+
+   static String start=LoginScreen.id;
+
+   initState() {
+     if( AuthController.getEmail()==null ){
+       start=LoginScreen.id;
+     }
+     else{
+       AutoLogedIn();
+     }
+
+    super.initState();
+  }
+AutoLogedIn()async{
+  final loginUser = await _auth.signInWithEmailAndPassword(
+      email:  AuthController.getEmail(),
+      password: AuthController.getPassward());
+  print(AuthController.getEmail());
+  print(AuthController.getPassward());
+  // AuthController.login(email,password);
+  try {
+    if (loginUser != null) {
+      start=HomeScreen.id;
+      // Navigator.pushNamed(context, HomeScreen.id);
+    }
+    setState(() {
+      // isVisible=false;
+    });
+  } catch (e) {
+    print(e);
+  }
+
+}
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: WelcomeScreen.id,
+      initialRoute:start,
       routes:{
         WelcomeScreen.id:(context)=>WelcomeScreen(),
         RegistrationScreen.id:(context)=>RegistrationScreen(),
         LoginScreen.id:(context)=>LoginScreen(),
         HomeScreen.id:(context)=>HomeScreen(),
-       ChatScreen.id:(context)=>ChatScreen(),
+        ChatScreen.id:(context)=>ChatScreen(),
       },
     );
   }

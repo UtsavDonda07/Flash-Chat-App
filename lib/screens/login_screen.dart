@@ -1,11 +1,12 @@
 import 'package:flash_chat_app/Components/rounded_button.dart';
 import 'package:flash_chat_app/constants.dart';
+import 'package:flash_chat_app/networking/auto_login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat_app/screens/chat_screen.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,6 +21,12 @@ class _LoginScreenState extends State<LoginScreen> {
   late String password;
   final _auth = FirebaseAuth.instance;
   bool isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,19 +44,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   tag: "logo",
                   child: Container(
                     height: 200.0,
-                    child: Image.asset('images/logo.png'),
+                    child: Lottie.asset('assets/hello.json',height: 300),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 48.0,
-              ),
+
               TextField(
                 onChanged: (value) {
                   email = value;
                 },
                 decoration: kTextfieldDecoratiuon.copyWith(
-                  hintText: 'Enter your Email.',
+                  hintText: "Enter Your Email...",
                 ),
               ),
               SizedBox(
@@ -67,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 24.0,
               ),
               RoundedButton(
-                colour: Colors.lightBlueAccent,
+                colour: Color(0xff60e1c8),
                 text: "Log In",
                 onPressed: () async {
                   setState(() {
@@ -75,7 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
 
                   final loginUser = await _auth.signInWithEmailAndPassword(
-                      email: email, password: password);
+                      email:  email,
+                       password: password);
+                  AuthController.login(email,password);
                   try {
                     if (loginUser != null) {
                       Navigator.pushNamed(context, HomeScreen.id);
@@ -88,6 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
               ),
+           Text(AuthController.getEmail()),
+        Text(AuthController.getPassward()),
             ],
           ),
         ),

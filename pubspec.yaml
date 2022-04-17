@@ -19,6 +19,23 @@ dependencies:
   lottie: ^1.2.1
   liquid_progress_indicator: ^0.4.0
   loading_overlay: ^0.3.0
+  intl: ^0.17.0
+  flutter_native_splash: ^2.1.6
+  shared_preferences: ^2.0.13
+  google_sign_in: ^5.3.0
+
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: true
+
+  image: "assets/hand.png"
+  background_image: "assets/background.png"
+
+  android_gravity: center
+  ios_content_mode: center
+  web_image_mode: center
 
 dev_dependencies:
   flutter_test:

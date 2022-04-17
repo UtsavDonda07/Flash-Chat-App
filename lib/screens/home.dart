@@ -1,9 +1,17 @@
+import 'dart:math';
+
 import 'package:flash_chat_app/constants.dart';
+import 'package:flash_chat_app/main.dart';
+import 'package:flash_chat_app/networking/auto_login.dart';
+import 'package:flash_chat_app/screens/profile.dart';
+import 'package:flash_chat_app/screens/setting.dart';
+import 'package:flash_chat_app/screens/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'chat_screen.dart';
+import 'login_screen.dart';
 
 late final String users;
 
@@ -12,7 +20,7 @@ final loggedInUser = FirebaseAuth.instance.currentUser;
 final _firestore = FirebaseFirestore.instance;
 
 late final String UserName;
-
+final currentUser = loggedInUser?.email;
 class HomeScreen extends StatefulWidget {
   static String id = "home_screen";
   @override
@@ -24,23 +32,115 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+
+
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        backgroundColor: Colors.white10,
+        child: Column(
+          children: [
+            SizedBox(
+             height: 100,
+            ),
+            CircleAvatar(
+              radius: 70.0,
+              backgroundColor:  Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+              child: Image.asset('images/profile.png',height: 100,),
+            ),
+
+            // Text(loggedInUser.toString(),style: TextStyle(fontSize: 50),),
+            SizedBox(
+              height: 50,
+            ),
+
+            Card(
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  Profile(loggedInUser?.email)),
+                  );
+                },
+
+                child:ListTile(
+                  leading: Icon(
+                    Icons.person,
+                    color:Color(0xff60e1c8),
+                    size:25.0,
+                  ),
+                  title: Text(
+                    ' Profile',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            Card(
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  Setting()),
+                  );
+                },
+
+                child:ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    color:Color(0xff60e1c8),
+                    size:25.0,
+                  ),
+                  title: Text(
+                    ' Setting',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+
+            Card(
+              child: FlatButton(
+                onPressed: () {
+                  _auth.signOut();
+                Navigator.pushNamed(context, LoginScreen.id);
+                },
+
+                child:ListTile(
+                  leading: Icon(
+                    Icons.logout,
+                    color:Color(0xff60e1c8),
+                    size:25.0,
+                  ),
+                  title: Text(
+                    ' Logout',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+
+          ],
+        ),
+      ),
       appBar: AppBar(
         leading: null,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                // Navigator.pop(context);
-              }),
-        ],
-        title: Center(child: Text('ChatApp')),
-        backgroundColor: Colors.lightBlueAccent,
+        title: Center(child: Text('Hello')),
+        backgroundColor:Color(0xff60e1c8),
       ),
       body: SafeArea(
         child: Column(
@@ -70,7 +170,7 @@ class UserStream extends StatelessWidget {
           for (var user in resisteredUsers!) {
             final allUsers = user['users'];
             final currentUser = loggedInUser?.email;
-            // if (currentUser == allUsers) {}
+
             final messageBubble = MessageBubble(users: allUsers);
             allUsersList.add(messageBubble);
           }
@@ -115,9 +215,12 @@ Row(
 
     Container(
 
-      child: Image.network('https://th.bing.com/th/id/OIP.WlUDXSME4D1KBxKlZEtVuwHaKA?pid=ImgDet&rs=1',height: 50,width: 50,),
+      child:CircleAvatar(
+        backgroundColor: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+        child: Text(users[0].toString().toUpperCase()),
+      ),
       decoration: BoxDecoration(
-        color: Colors.white30,
+        color: Colors.black,
         borderRadius: BorderRadiusDirectional.circular(100),
       ),
     ),
