@@ -7,8 +7,6 @@ late  String SelectedReciver;
 void ReciverUser(String user){
  SelectedReciver=user;
 }
-var timeH;
-var timeM;
 final loggedInUser = FirebaseAuth.instance.currentUser;
 final _firestore = FirebaseFirestore.instance;
 final currentuser = loggedInUser?.email;
@@ -73,6 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         leading: null,
         actions: <Widget>[
@@ -84,53 +83,57 @@ class _ChatScreenState extends State<ChatScreen> {
               }),
         ],
         title: Center(child: Text('$SelectedReciver')),
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Color(0xff222e35),
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            MessagesStream(),
-            Container(
-              decoration: kMessageContainerDecoration,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      onChanged: (value) {
-                        controller:
-                        fieldText;
-                        messageText = value;
-                        //Do something with the user input.
-                      },
-                      decoration: kMessageTextFieldDecoration,
+        child: Container(
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              MessagesStream(),
+              Container(
+                decoration: kMessageContainerDecoration,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          controller:
+                          fieldText;
+                          messageText = value;
+                          //Do something with the user input.
+                        },
+                        decoration: kMessageTextFieldDecoration,
 
 
 
-                      controller: fieldText, ),
-                  ),
-                  FlatButton(
-                    onPressed: ()
-                    {
-                      var timeM=DateTime.now().minute;
-                      timeH=DateTime.now().hour;
-                      clearText();
-                      _firestore.collection('messages').add(
-                          {'text': messageText, 'sender': loggedInUser!.email,'reciver':SelectedReciver,'communicate':"${currentuser}-${SelectedReciver}" ,'CreatedAt':DateTime.now().millisecondsSinceEpoch });
-
-                    },
-                    child: Text(
-                      'Send',
-                      style: kSendButtonTextStyle,
+                        controller: fieldText, ),
                     ),
-                  ),
-                ],
+                    FlatButton(
+                      onPressed: ()
+                      {
+                        clearText();
+                        _firestore.collection('messages').add(
+                            {'text': messageText, 'sender': loggedInUser!.email,'reciver':SelectedReciver,'communicate':"${currentuser}-${SelectedReciver}" ,'CreatedAt':DateTime.now().millisecondsSinceEpoch });
+
+                      },
+                      child: Text(
+                        'Send',
+                        style: kSendButtonTextStyle,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+       decoration: BoxDecoration(
+         image: DecorationImage(image: AssetImage("images/ChatBackground.jpg"), fit: BoxFit.fill)
+       ),
         ),
       ),
     );
@@ -172,7 +175,7 @@ class MessagesStream extends StatelessWidget {
           );
         } else {
           return Expanded(
-            child: Column(children: [Text("wait will a second")],),
+            child: Center(child: CircularProgressIndicator()),
           );
         }
       },

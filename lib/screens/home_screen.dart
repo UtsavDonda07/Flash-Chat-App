@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'chat_screen.dart';
 import 'login_screen.dart';
 
@@ -18,7 +19,6 @@ late final String users;
 final loggedInUser = FirebaseAuth.instance.currentUser;
 
 final _firestore = FirebaseFirestore.instance;
-
 late final String UserName;
 final currentUser = loggedInUser?.email;
 class HomeScreen extends StatefulWidget {
@@ -41,8 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff111b21),
       drawer: Drawer(
-        backgroundColor: Colors.white10,
+        backgroundColor: Colors.black,
         child: Column(
           children: [
             SizedBox(
@@ -58,7 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 50,
             ),
-
+        Text(loggedInUser!.email.toString(),style: TextStyle(fontSize: 30),),
+            SizedBox(
+              height: 50,
+            ),
             Card(
               child: FlatButton(
                 onPressed: () {
@@ -71,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child:ListTile(
                   leading: Icon(
                     Icons.person,
-                    color:Color(0xff60e1c8),
+                    color:Colors.black54,
                     size:25.0,
                   ),
                   title: Text(
@@ -96,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 child:ListTile(
                   leading: Icon(
                     Icons.settings,
-                    color:Color(0xff60e1c8),
                     size:25.0,
                   ),
                   title: Text(
@@ -109,11 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-
-            Card(
+           Card(
               child: FlatButton(
                 onPressed: () {
                   _auth.signOut();
+                AuthController.logout();
                 Navigator.pushNamed(context, LoginScreen.id);
                 },
 
@@ -139,8 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       appBar: AppBar(
         leading: null,
-        title: Center(child: Text('Hello')),
-        backgroundColor:Color(0xff60e1c8),
+        backgroundColor: Color(0xff222e35),
+        title: Center(child: Text(AuthController.myEmail)),
       ),
       body: SafeArea(
         child: Column(
@@ -204,7 +207,7 @@ final String users;
       children: [
         FlatButton(
           onPressed: () {
-            Navigator.pushNamed(context, ChatScreen.id,arguments: users);    //arguments: aapvani peticular message mate
+            Navigator.pushNamed(context, ChatScreen.id,arguments: users);
             ReciverUser(users);
           },
           child: Column(
@@ -216,11 +219,11 @@ Row(
     Container(
 
       child:CircleAvatar(
-        backgroundColor: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+        // backgroundColor: Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
         child: Text(users[0].toString().toUpperCase()),
       ),
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: Colors.black54,
         borderRadius: BorderRadiusDirectional.circular(100),
       ),
     ),
@@ -237,7 +240,7 @@ Row(
 
               SizedBox(
                 child: Divider(
-                  color: Colors.blue,
+                  color: Color(0xff202c33),
                 ),
               ),
             ],

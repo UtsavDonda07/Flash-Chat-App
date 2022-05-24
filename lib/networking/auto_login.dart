@@ -7,7 +7,9 @@ class AuthController {
   static login(String email,String password){
     myEmail=email;
     myPassword=password;
-
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!authcontroller!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+print(myEmail);
+print(myPassword);
     //save user data in storage
     setEmail();
     setPassword();
@@ -31,10 +33,9 @@ class AuthController {
     SharedPreferences pref= await SharedPreferences.getInstance();
     pref.setString("savePassword", myPassword);
   }
-      static logout() {
-
-    // myEmail=;
-    // savePassword= ;
+      static logout() async{
+       myEmail=="null";
+       myPassword="null";
       }
 
 

@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flash_chat_app/screens/home.dart';
+import 'package:flash_chat_app/screens/home_screen.dart';
 import 'package:flash_chat_app/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_app/screens/resistration_screen.dart';
@@ -30,11 +30,11 @@ class _HelloState extends State<Hello> {
 
   @override
 
-   static String start=LoginScreen.id;
+   static String start=WelcomeScreen.id;
 
    initState() {
-     if( AuthController.getEmail()==null ){
-       start=LoginScreen.id;
+     if( AuthController.getEmail() == "null" ){
+       start=WelcomeScreen.id;
      }
      else{
        AutoLogedIn();
@@ -43,29 +43,25 @@ class _HelloState extends State<Hello> {
     super.initState();
   }
 AutoLogedIn()async{
+  setState(() {});
+print("..........................Auto logedIn ...........................");
   final loginUser = await _auth.signInWithEmailAndPassword(
       email:  AuthController.getEmail(),
       password: AuthController.getPassward());
-  print(AuthController.getEmail());
-  print(AuthController.getPassward());
-  // AuthController.login(email,password);
   try {
     if (loginUser != null) {
-      start=HomeScreen.id;
-      // Navigator.pushNamed(context, HomeScreen.id);
+      Navigator.pushNamed(context, HomeScreen.id);
     }
-    setState(() {
-      // isVisible=false;
-    });
+
   } catch (e) {
     print(e);
   }
-
 }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       initialRoute:start,
       routes:{

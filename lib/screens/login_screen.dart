@@ -7,7 +7,9 @@ import 'package:flash_chat_app/screens/chat_screen.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'home.dart';
+
+import 'home_screen.dart';
+
 
 class LoginScreen extends StatefulWidget {
   static String id = "login_screen";
@@ -30,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: LoadingOverlay(
         isLoading: isVisible,
         child: Padding(
@@ -95,8 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
               ),
-           Text(AuthController.getEmail()),
-        Text(AuthController.getPassward()),
             ],
           ),
         ),

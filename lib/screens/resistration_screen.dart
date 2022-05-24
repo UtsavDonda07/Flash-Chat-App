@@ -6,7 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:lottie/lottie.dart';
-import 'home.dart';
+
+import 'home_screen.dart';
 
 final _firestore = FirebaseFirestore.instance;
 

@@ -13,14 +13,13 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
 getmail(){
+  setState(() {});
   return currentuser;
 }
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home:Scaffold(
+    return Scaffold(
 
         appBar: AppBar(
           backgroundColor: Color(0xff60e1c8),
@@ -101,9 +100,8 @@ getmail(){
                 ],
               ),
 
-            ),
+            );
 
-    );
 
   }
 }

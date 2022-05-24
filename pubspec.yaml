@@ -23,7 +23,7 @@ dependencies:
   flutter_native_splash: ^2.1.6
   shared_preferences: ^2.0.13
   google_sign_in: ^5.3.0
-
+  get: ^4.1.4
 
 flutter_native_splash:
   android: true
