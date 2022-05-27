@@ -10,8 +10,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'networking/auto_login.dart';
 
-void main() async{
-
+late SharedPreferences preferences;
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const Hello());
@@ -27,49 +27,63 @@ class Hello extends StatefulWidget {
 class _HelloState extends State<Hello> {
   final _auth = FirebaseAuth.instance;
 
+  String? email;
+  String? password;
 
   @override
+  static String start = WelcomeScreen.id;
 
-   static String start=WelcomeScreen.id;
-
-   initState() {
-     if( AuthController.getEmail() == "null" ){
-       start=WelcomeScreen.id;
-     }
-     else{
-       AutoLogedIn();
-     }
-
+  void initState() {
+    init();
+    screen();
     super.initState();
   }
-AutoLogedIn()async{
-  setState(() {});
-print("..........................Auto logedIn ...........................");
-  final loginUser = await _auth.signInWithEmailAndPassword(
-      email:  AuthController.getEmail(),
-      password: AuthController.getPassward());
-  try {
-    if (loginUser != null) {
-      Navigator.pushNamed(context, HomeScreen.id);
-    }
 
-  } catch (e) {
-    print(e);
+  Future init() async {
+    preferences = await SharedPreferences.getInstance();
+    // bool? m = preferences.getBool("mode");
+    email = preferences.getString("email")!;
+    password = preferences.getString("password")!;
+    email = email;
+    password = password;
   }
-}
+
+  void screen() {
+    if (email != null && password != null) {
+
+      login(email!,password!);
+    } else {
+      start = WelcomeScreen.id;
+    }
+  }
+
+  void login(String email,String password) async {
+    preferences.setString("email", email);
+    preferences.setString("password", password);
+    final loginUser = await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+    AuthController.login(email, password);
+    try {
+      if (loginUser != null) {
+        Navigator.pushNamed(context, HomeScreen.id);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      initialRoute:start,
-      routes:{
-        WelcomeScreen.id:(context)=>WelcomeScreen(),
-        RegistrationScreen.id:(context)=>RegistrationScreen(),
-        LoginScreen.id:(context)=>LoginScreen(),
-        HomeScreen.id:(context)=>HomeScreen(),
-        ChatScreen.id:(context)=>ChatScreen(),
+      initialRoute: WelcomeScreen.id,
+      routes: {
+        WelcomeScreen.id: (context) => WelcomeScreen(),
+        RegistrationScreen.id: (context) => RegistrationScreen(),
+        LoginScreen.id: (context) => LoginScreen(),
+        HomeScreen.id: (context) => HomeScreen(),
+        ChatScreen.id: (context) => ChatScreen(),
       },
     );
   }

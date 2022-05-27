@@ -1,33 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleSignIn extends StatefulWidget {
-  const GoogleSignIn({Key? key}) : super(key: key);
+class LoginController extends GetxController{
+  var _googleSignin=GoogleSignIn();
+  var googleAccount=Rx <GoogleSignInAccount?>(null);
+  login() async{
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    googleAccount.value= await _googleSignin.signIn();
 
-  @override
-  State<GoogleSignIn> createState() => _GoogleSignInState();
-}
-
-class _GoogleSignInState extends State<GoogleSignIn> {
-  GoogleSignIn _googleSignIn=GoogleSignIn();
-  GoogleSignInAccount? _user;
-  @override
-  Widget build(BuildContext context) {
+    print(googleAccount.value?.email);
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 
-    return MaterialApp(
-      home: Scaffold(
-        body: Column(
-          children: [
-            FlatButton(
-                onPressed: (){}
-                ,
-                child: Text("login"),
-            ),
-          ],
-        ),
-      ),
-    );
   }
+
 }

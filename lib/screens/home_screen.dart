@@ -59,10 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 50,
             ),
-        Text(loggedInUser!.email.toString(),style: TextStyle(fontSize: 30),),
-            SizedBox(
-              height: 50,
-            ),
+        // Text(loggedInUser!.email.toString(),style: TextStyle(fontSize: 30),),
+        //     SizedBox(
+        //       height: 50,
+        //     ),
             Card(
               child: FlatButton(
                 onPressed: () {
@@ -114,10 +114,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
            Card(
               child: FlatButton(
-                onPressed: () {
+                onPressed: () async{
                   _auth.signOut();
+            // preferences = await SharedPreferences.getInstance();
+            preferences.clear();
                 AuthController.logout();
-                Navigator.pushNamed(context, LoginScreen.id);
+                Navigator.pushNamed(context, WelcomeScreen.id);
                 },
 
                 child:ListTile(

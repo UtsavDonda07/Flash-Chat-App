@@ -14,7 +14,7 @@ print(myPassword);
     setEmail();
     setPassword();
   }
-   static getEmail() async{
+  static getEmail() async{
       SharedPreferences pref= await SharedPreferences.getInstance();
       var saveEmail= pref.getString("saveEmail");
       return saveEmail;
