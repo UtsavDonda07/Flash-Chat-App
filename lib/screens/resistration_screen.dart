@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flash_chat_app/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:lottie/lottie.dart';
 
@@ -21,13 +22,16 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   late String email;
   late String password;
+  late String name;
+  late String MobileNo;
   final _auth = FirebaseAuth.instance;
   bool isVisible = false;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: LoadingOverlay(
         isLoading: isVisible,
         child: Padding(
@@ -36,16 +40,44 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Flexible(
-                child: Hero(
-                  tag: "logo",
-                  child: Container(
-                    height: 200.0,
-                    child: Lottie.asset('assets/hello.json',height: 300),
-                  ),
+              // Flexible(
+              //   child: Hero(
+              //     tag: "logo",
+              //     child: Container(
+              //       height: 200.0,
+              //       child: Lottie.asset('assets/hello.json',height: 300),
+              //     ),
+              //   ),
+              // ),
+
+              TextField(
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  name = value;
+                },
+
+                decoration: kTextfieldDecoratiuon.copyWith(
+                  hintText: "Enter your Profile Name.",
                 ),
               ),
+              SizedBox(
+                height: 30.0,
+              ),
+              TextField(
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  MobileNo=value;
+                },
+                decoration: kTextfieldDecoratiuon.copyWith(
+                  hintText: "Enter mobile no.",
+                ),
+                maxLength: 10,
+                  keyboardType: TextInputType.number,
 
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
               TextField(
                 textAlign: TextAlign.center,
                 onChanged: (value) {
@@ -56,7 +88,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
               SizedBox(
-                height: 8.0,
+                height: 30.0,
               ),
               TextField(
                 textAlign: TextAlign.center,
@@ -83,7 +115,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         email: email, password: password);
                     _firestore
                         .collection('resisteredUsers')               // for take list of resistered User diff. list
-                        .add({'users': email});
+                        .add({
+                      'name' :name,
+                      'users': email,
+                      'url':"https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
+                      'mobileNo':MobileNo
+                        });
 
                     if (newUser != null) {
                       Navigator.pushNamed(context, HomeScreen.id);

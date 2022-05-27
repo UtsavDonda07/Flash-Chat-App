@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-late  String SelectedReciver;
-void ReciverUser(String user){
- SelectedReciver=user;
+import 'home_screen.dart';
+
+late String SelectedReciver;
+late String name;
+late String url;
+void ReciverUser(String user, String n, String image) {
+  SelectedReciver = user;
+  name = n;
+  url = image;
 }
+
 final loggedInUser = FirebaseAuth.instance.currentUser;
 final _firestore = FirebaseFirestore.instance;
 final currentuser = loggedInUser?.email;
-late final  String UserName;
+late final String UserName;
+
 class ChatScreen extends StatefulWidget {
   static String id = "chat_screen";
   @override
@@ -23,25 +31,15 @@ class _ChatScreenState extends State<ChatScreen> {
 
   late String messageText;
 
-
   @override
   void initState() {
     getCurrentUser();
-    // messageStream();
-    // reciver="introgyan@gmail.com";
     super.initState();
   }
+
   void clearText() {
     fieldText.clear();
   }
-//   void UpdateData() {
-//     final docUser =
-//         FirebaseFirestore.instance.collection('messages').doc('Mydoc_name');
-// //update docuser
-//     docUser.update({
-//       'name': 'Swaminarayan',
-//     });
-//   }
 
   void getCurrentUser() async {
     try {
@@ -54,40 +52,57 @@ class _ChatScreenState extends State<ChatScreen> {
       print(e);
     }
   }
-// void getMassages()async{
-//   final messages =  await _firestore.collection('messages').doc();
-//   for(var message in messages){
-//     print(message.data);
-//   }
-// }
+
   void messageStream() async {
-    await for (var snapshort in _firestore.collection('messages').orderBy('CreatedAt').snapshots()) {
+    await for (var snapshort
+        in _firestore.collection('messages').orderBy('CreatedAt').snapshots()) {
       for (var message in snapshort.docs) {
         print(message.data());
       }
     }
   }
 
+  void reciverstatus() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         leading: null,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                  _auth.signOut();
-                Navigator.pop(context);
-              }),
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+              child: CircleAvatar(
+                  child: Image(image: NetworkImage(url), fit: BoxFit.cover)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '$name ',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          PopupMenuButton(
+            child: Icon(Icons.menu),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: Text('About me'),
+              ),
+           ],
+          ),
+          
         ],
-        title: Center(child: Text('$SelectedReciver')),
+        // title: Center(child: Text('$SelectedReciver ')),
         backgroundColor: Color(0xff222e35),
       ),
       body: SafeArea(
         child: Container(
-
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -108,18 +123,19 @@ class _ChatScreenState extends State<ChatScreen> {
                           //Do something with the user input.
                         },
                         decoration: kMessageTextFieldDecoration,
-
-
-
-                        controller: fieldText, ),
+                        controller: fieldText,
+                      ),
                     ),
                     FlatButton(
-                      onPressed: ()
-                      {
+                      onPressed: () {
                         clearText();
-                        _firestore.collection('messages').add(
-                            {'text': messageText, 'sender': loggedInUser!.email,'reciver':SelectedReciver,'communicate':"${currentuser}-${SelectedReciver}" ,'CreatedAt':DateTime.now().millisecondsSinceEpoch });
-
+                        _firestore.collection('messages').add({
+                          'text': messageText,
+                          'sender': loggedInUser!.email,
+                          'reciver': SelectedReciver,
+                          'communicate': "${currentuser}-${SelectedReciver}",
+                          'CreatedAt': DateTime.now().millisecondsSinceEpoch
+                        });
                       },
                       child: Text(
                         'Send',
@@ -131,9 +147,10 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
-       decoration: BoxDecoration(
-         image: DecorationImage(image: AssetImage("images/ChatBackground.jpg"), fit: BoxFit.fill)
-       ),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("images/ChatBackground.jpg"),
+                  fit: BoxFit.fill)),
         ),
       ),
     );
@@ -146,7 +163,14 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').where("communicate",whereIn: ["${currentuser}-${SelectedReciver}","${SelectedReciver}-${currentuser}"]).orderBy('CreatedAt').snapshots(),
+      stream: _firestore
+          .collection('messages')
+          .where("communicate", whereIn: [
+            "${currentuser}-${SelectedReciver}",
+            "${SelectedReciver}-${currentuser}"
+          ])
+          .orderBy('CreatedAt')
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final messages = snapshot.data?.docs.reversed;
@@ -154,13 +178,13 @@ class MessagesStream extends StatelessWidget {
           for (var message in messages!) {
             final messageText = message['text'];
             final messageSender = message['sender'];
-            final time=message['CreatedAt'];
+            final time = message['CreatedAt'];
             final currentUser = loggedInUser?.email;
             if (currentUser == messageSender) {}
             final messageBubble = MessageBubble(
               text: messageText,
               sender: messageSender,
-              CreatedAt:time,
+              CreatedAt: time,
               isMe: currentUser == messageSender,
             );
 
@@ -184,11 +208,15 @@ class MessagesStream extends StatelessWidget {
 }
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble({required this.text, required this.sender, required this.isMe,required this.CreatedAt});
+  MessageBubble(
+      {required this.text,
+      required this.sender,
+      required this.isMe,
+      required this.CreatedAt});
   final String sender;
   final String text;
   final bool isMe;
-   var CreatedAt;
+  var CreatedAt;
 
   DateTime date = new DateTime.fromMillisecondsSinceEpoch(1486252500000);
   @override
@@ -197,8 +225,11 @@ class MessageBubble extends StatelessWidget {
       crossAxisAlignment:
           isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        Text("   $sender",
-          style: isMe?TextStyle(fontSize: 10, color: Colors.black38):TextStyle(fontSize: 10, color: Colors.green),
+        Text(
+          "   $sender",
+          style: isMe
+              ? TextStyle(fontSize: 10, color: Colors.black38)
+              : TextStyle(fontSize: 10, color: Colors.green),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
@@ -215,7 +246,7 @@ class MessageBubble extends StatelessWidget {
                 children: [
                   Text(
                     '$text',
-                    style: TextStyle(fontSize: 15,color: Colors.white),
+                    style: TextStyle(fontSize: 15, color: Colors.white),
                   ),
                   // Text(
                   //   '$date',
@@ -223,8 +254,6 @@ class MessageBubble extends StatelessWidget {
                   // ),
                 ],
               ),
-
-
             ),
           ),
         ),
