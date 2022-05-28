@@ -18,7 +18,7 @@ late final String users;
 final loggedInUser = FirebaseAuth.instance.currentUser;
 
 final _firestore = FirebaseFirestore.instance;
-late final String UserName;
+
 final currentUser = loggedInUser?.email;
 String status = "offline";
 
@@ -30,9 +30,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
-
+  late final String UserName;
+  late final String url;
+late final String no;
   @override
   void initState() {
+    setState((){});
     status = "online";
     super.initState();
   }
@@ -48,33 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 100,
             ),
-            CircleAvatar(
-              radius: 70.0,
-              backgroundColor: Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                  .withOpacity(1.0),
-              child: Image.asset(
-                'images/profile.png',
-                height: 100,
-              ),
-            ),
 
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FlatButton(onPressed: () {}, child: Icon(Icons.edit)),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-             // Text(name,style: TextStyle(fontSize: 20),),
-              ],
-            ),
-            // Text(loggedInUser.toString(),style: TextStyle(fontSize: 50),),
-            SizedBox(
-              height: 30,
-            ),
 
             Card(
               child: FlatButton(
@@ -82,7 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Profile(loggedInUser?.email)),
+                        builder: (context) => Profile(
+                              // logedInMail: currentUser.toString(),
+                              // imageUrl: url,
+                              // mno: no,
+                            )),
                   );
                 },
                 child: ListTile(
@@ -183,14 +164,16 @@ class UserStream extends StatelessWidget {
           for (var user in resisteredUsers!) {
             final allUsers = user['users'];
 
-            String url = user['url'];
 
-            final name=user['name'];
+             var no = user['mobileNo'];
+            final name = user['name'];
+            url = user['url']?? "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png";
             // if (url == "")
             //   url="https://cdn-icons-png.flaticon.com/512/64/64572.png";
 
             final currentUser = loggedInUser?.email;
-            final messageBubble = MessageBubble(users: allUsers, image: url,name: name);
+            final messageBubble =
+                MessageBubble(users: allUsers, image: url, name: name);
             allUsersList.add(messageBubble);
           }
           return Expanded(
@@ -208,29 +191,23 @@ class UserStream extends StatelessWidget {
 }
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble(
-      {required this.users, required this.image , required this.name});
+  MessageBubble({required this.users, required this.image, required this.name});
   final String users;
   final String image;
   final String name;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       child: ListTile(
         leading: CircleAvatar(
           maxRadius: 50,
-          child: Image.network(
-            image,
-            fit: BoxFit.cover
-
-          ),
-
+          child: Image.network(image, fit: BoxFit.cover),
         ),
         title: Text(name),
         onTap: () {
           Navigator.pushNamed(context, ChatScreen.id, arguments: users);
-          ReciverUser(users, name,image);
+          ReciverUser(users, name, image);
         },
       ),
     );

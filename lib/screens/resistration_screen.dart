@@ -1,5 +1,6 @@
 import 'package:flash_chat_app/constants.dart';
 import 'package:flash_chat_app/screens/chat_screen.dart';
+import 'package:flash_chat_app/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_app/components/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -118,7 +119,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         .add({
                       'name' :name,
                       'users': email,
-                      'url':"https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
+                      'url':uri??"https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png",
                       'mobileNo':MobileNo
                         });
 

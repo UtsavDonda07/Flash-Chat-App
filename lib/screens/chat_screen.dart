@@ -74,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
               child: CircleAvatar(
-                  child: Image(image: NetworkImage(url), fit: BoxFit.cover)),
+                  child: Image(image: NetworkImage(url!=null?url : "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"), fit: BoxFit.cover)),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -229,7 +229,7 @@ class MessageBubble extends StatelessWidget {
           "   $sender",
           style: isMe
               ? TextStyle(fontSize: 10, color: Colors.black38)
-              : TextStyle(fontSize: 10, color: Colors.green),
+              : TextStyle(fontSize: 10, color: Color(0xff005c4b)),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
@@ -238,7 +238,7 @@ class MessageBubble extends StatelessWidget {
             // borderRadius: BorderRadius.only(topLeft: , ),
             borderRadius: BorderRadius.circular(10),
 
-            color: isMe ? Colors.green : Colors.grey,
+            color: isMe ?  Color(0xff005c4b) : Color(0xff202c33),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               child: Column(
